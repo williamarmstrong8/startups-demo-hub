@@ -59,21 +59,35 @@ export function GuideResources({ index }: { index: Record<string, Resources> }) 
           <p className={styles.group}>Skills used</p>
           <ul className={styles.list}>
             {skills.map((skill) => {
-              const external = skill.href?.startsWith('http')
+              const glyph = (
+                <>
+                  <span className={styles.icon}>
+                    <SkillGlyph />
+                  </span>
+                  {skill.name}
+                </>
+              )
 
               return (
                 <li key={skill.name}>
-                  <a
-                    className={styles.link}
-                    href={skill.href}
-                    title={skill.note}
-                    {...(external && { target: '_blank', rel: 'noreferrer' })}
-                  >
-                    <span className={styles.icon}>
-                      <SkillGlyph />
+                  {/* Only the skills installed from somewhere public have a page
+                    * of their own to link to; the rest are written in the build,
+                    * so the guide's own step is where they live. */}
+                  {skill.href ? (
+                    <a
+                      className={styles.link}
+                      href={skill.href}
+                      title={skill.note}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {glyph}
+                    </a>
+                  ) : (
+                    <span className={styles.item} title={skill.note}>
+                      {glyph}
                     </span>
-                    {skill.name}
-                  </a>
+                  )}
                 </li>
               )
             })}

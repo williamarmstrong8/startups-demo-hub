@@ -8,6 +8,10 @@ import {
   demoMeta as tarsMeta,
   DemoSteps as TarsSteps
 } from './build-a-startup-landing-page-with-v0'
+import {
+  demoMeta as backendsMeta,
+  DemoSteps as BackendsSteps
+} from './frontends-vs-backends'
 
 export interface DemoEntry {
   meta: DemoMeta
@@ -20,6 +24,10 @@ export interface DemoEntry {
  * newest recording goes first.
  */
 const demos: Record<string, DemoEntry> = {
+  'frontends-vs-backends': {
+    meta: backendsMeta,
+    Steps: BackendsSteps
+  },
   'build-a-startup-landing-page-with-v0': {
     meta: tarsMeta,
     Steps: TarsSteps

@@ -9,13 +9,28 @@ import { getGuideResourceIndex } from '../lib/demos/resources'
 import 'nextra-theme-docs/style.css'
 import './guide-chrome.css'
 
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : 'http://localhost:3000'
+
 export const metadata = {
+  // Resolves the generated app/opengraph-image to an absolute URL, which every
+  // link scraper requires.
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Startups Demo Hub',
     template: '%s – Startups Demo Hub'
   },
   description:
-    'Recorded end-to-end build sessions, each paired with a step-by-step build guide.'
+    'Recorded end-to-end build sessions, each paired with a step-by-step build guide.',
+  openGraph: {
+    type: 'website',
+    siteName: 'Startups Demo Hub',
+    title: 'Startups Demo Hub',
+    description:
+      'Recorded end-to-end build sessions, each paired with a step-by-step build guide.'
+  },
+  twitter: { card: 'summary_large_image' }
 }
 
 /* `projectLink` is omitted so the navbar carries only the logo, the search and

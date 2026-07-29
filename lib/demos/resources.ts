@@ -1,6 +1,6 @@
 import type { DemoSkill, Requirement } from '@/components/guide'
 import { getAllDemos } from './index'
-import { getSkillsForDemo, skillHref } from './skills'
+import { getSkillsForDemo } from './skills'
 
 export interface GuideResources {
   requirements: Requirement[]
@@ -12,8 +12,9 @@ export interface GuideResources {
  * lives in the theme's right-hand column, which is shared by every page, so it
  * picks its guide out of this map by route.
  *
- * Skills are flattened to name, note and href here so the client never receives
- * the skill sources, which are only needed on the skill pages themselves.
+ * Skills are flattened to a name and a note here so the client never receives
+ * the skill sources, which the guide's own code blocks already render. Only the
+ * skills installed from somewhere public carry a link.
  */
 export function getGuideResourceIndex(): Record<string, GuideResources> {
   const index: Record<string, GuideResources> = {}
@@ -28,7 +29,7 @@ export function getGuideResourceIndex(): Record<string, GuideResources> {
       ? group.skills.map((skill) => ({
           name: skill.name,
           note: skill.summary,
-          href: skillHref(group.segment, skill.id)
+          href: skill.href
         }))
       : []
 

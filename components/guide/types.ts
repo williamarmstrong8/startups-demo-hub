@@ -16,12 +16,13 @@ export interface Requirement {
   action: string
 }
 
-/** A skill in a guide's resources rail, linking to the skill's own page. */
+/** A skill listed in a guide's resources rail. */
 export interface DemoSkill {
   /** The skill's own name, e.g. `morning_report`. */
   name: string
   /** One line on what it does. */
   note?: string
+  /** Set only for skills installed from somewhere public, e.g. skills.sh. */
   href?: string
 }
 

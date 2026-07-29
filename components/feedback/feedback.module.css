@@ -1,0 +1,457 @@
+/* Feedback form. Borders, greys and the accent fill are the same ones the hub
+ * uses, so the controls read as part of the same site rather than as browser
+ * defaults. Tailwind's preflight ships with Nextra and strips borders and
+ * backgrounds off form elements, so every control sets its own. */
+
+/* Horizontal inset comes from the Nextra content wrapper (see
+ * app/guide-chrome.css), so this only owns the column width and the vertical
+ * rhythm. The route hides the sidebar and the right rail, which leaves the
+ * article full width, so the column centres itself rather than sitting against
+ * the left edge of an empty page. */
+.page {
+  width: 100%;
+  max-width: 44rem;
+  margin-inline: auto;
+  padding: 0.5rem 0 3rem;
+}
+
+.head {
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.6rem;
+  color: rgb(115 115 115);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: var(--guide-heading-color, currentColor);
+  font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.lead {
+  margin: 0.9rem 0 0;
+  color: rgb(82 82 82);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+:global(.dark) .lead {
+  color: rgb(163 163 163);
+}
+
+/* Prompts ------------------------------------------------------------- */
+.prompts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 2.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.prompt {
+  padding: 0.9rem 1rem;
+  border: 1px solid rgb(128 128 128 / 0.22);
+  border-radius: 10px;
+}
+
+.promptTitle {
+  margin: 0;
+  color: var(--guide-heading-color, currentColor);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.promptBody {
+  margin: 0.35rem 0 0;
+  color: rgb(82 82 82);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+:global(.dark) .promptBody {
+  color: rgb(163 163 163);
+}
+
+/* Form ---------------------------------------------------------------- */
+.form {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.field {
+  display: block;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.label {
+  display: block;
+  padding: 0;
+  color: var(--guide-heading-color, currentColor);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.optional {
+  color: rgb(115 115 115);
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.hint {
+  margin: 0.3rem 0 0;
+  color: rgb(115 115 115);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+/* Rating -------------------------------------------------------------- */
+.rating {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  margin-top: 0.6rem;
+}
+
+.star {
+  display: inline-flex;
+  padding: 0.2rem;
+  color: rgb(128 128 128 / 0.55);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 120ms ease, transform 120ms ease;
+}
+
+.star:hover {
+  transform: translateY(-1px);
+}
+
+.starOn {
+  color: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation)
+      var(--nextra-primary-lightness)
+  );
+}
+
+.star:focus-within {
+  outline: 2px solid
+    hsl(
+      var(--nextra-primary-hue) var(--nextra-primary-saturation)
+        var(--nextra-primary-lightness)
+    );
+  outline-offset: 1px;
+}
+
+.ratingHint {
+  margin-left: 0.6rem;
+  color: rgb(115 115 115);
+  font-size: 0.82rem;
+}
+
+/* Pills --------------------------------------------------------------- */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.pill {
+  padding: 0.35rem 0.75rem;
+  color: rgb(82 82 82);
+  font-size: 0.82rem;
+  font-weight: 500;
+  border: 1px solid rgb(128 128 128 / 0.28);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+:global(.dark) .pill {
+  color: rgb(163 163 163);
+}
+
+.pill:hover {
+  border-color: rgb(128 128 128 / 0.55);
+  background: rgb(128 128 128 / 0.08);
+}
+
+/* The accent is near-black on light and near-white on dark, so the selected
+ * pill inverts its text the way the hub's primary action does. */
+.pillOn,
+.pillOn:hover {
+  color: rgb(250 250 250);
+  border-color: transparent;
+  background: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation)
+      var(--nextra-primary-lightness)
+  );
+}
+
+:global(.dark) .pillOn,
+:global(.dark) .pillOn:hover {
+  color: rgb(23 23 23);
+}
+
+.pill:focus-within {
+  outline: 2px solid
+    hsl(
+      var(--nextra-primary-hue) var(--nextra-primary-saturation)
+        var(--nextra-primary-lightness)
+    );
+  outline-offset: 2px;
+}
+
+/* Text controls ------------------------------------------------------- */
+.input,
+.select,
+.textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.7rem;
+  color: var(--guide-heading-color, currentColor);
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  border: 1px solid rgb(128 128 128 / 0.28);
+  border-radius: 8px;
+  background: rgb(128 128 128 / 0.04);
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: rgb(115 115 115);
+}
+
+.input:hover,
+.select:hover,
+.textarea:hover {
+  border-color: rgb(128 128 128 / 0.5);
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation)
+      var(--nextra-primary-lightness)
+  );
+  background: transparent;
+  outline: none;
+}
+
+.textarea[aria-invalid='true'] {
+  border-color: rgb(190 60 60);
+}
+
+/* Preflight leaves the UA arrow in place but zeroes the padding it reserves, so
+ * the glyph is redrawn as a background image with room made for it. */
+.select {
+  padding-right: 2rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 9l7 7 7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+}
+
+.counter {
+  margin: 0.35rem 0 0;
+  color: rgb(115 115 115);
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.error {
+  margin: 0.4rem 0 0;
+  color: rgb(190 60 60);
+  font-size: 0.82rem;
+}
+
+:global(.dark) .error {
+  color: rgb(240 130 130);
+}
+
+/* Checkbox ------------------------------------------------------------ */
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+  color: rgb(82 82 82);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+:global(.dark) .checkboxRow {
+  color: rgb(163 163 163);
+}
+
+.checkbox {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  accent-color: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation)
+      var(--nextra-primary-lightness)
+  );
+  cursor: pointer;
+}
+
+/* Actions ------------------------------------------------------------- */
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  color: rgb(250 250 250);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  border: none;
+  border-radius: 8px;
+  background: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation)
+      var(--nextra-primary-lightness)
+  );
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+:global(.dark) .primaryButton {
+  color: rgb(23 23 23);
+}
+
+.primaryButton:hover {
+  opacity: 0.82;
+}
+
+.primaryButton:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.secondaryButton {
+  padding: 0;
+  color: rgb(115 115 115);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.secondaryButton:hover {
+  color: var(--guide-heading-color, currentColor);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Confirmation -------------------------------------------------------- */
+.done {
+  padding: 2rem 1.5rem 2.25rem;
+  text-align: center;
+  border: 1px solid rgb(128 128 128 / 0.22);
+  border-radius: 12px;
+}
+
+.doneMark {
+  display: inline-grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  color: rgb(250 250 250);
+  border-radius: 999px;
+  background: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation)
+      var(--nextra-primary-lightness)
+  );
+}
+
+:global(.dark) .doneMark {
+  color: rgb(23 23 23);
+}
+
+.doneTitle {
+  margin: 1rem 0 0;
+  color: var(--guide-heading-color, currentColor);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.doneBody {
+  max-width: 30rem;
+  margin: 0.6rem auto 1.35rem;
+  color: rgb(82 82 82);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+:global(.dark) .doneBody {
+  color: rgb(163 163 163);
+}
+
+/* Footnote ------------------------------------------------------------ */
+.footnote {
+  margin: 2.5rem 0 0;
+  padding-top: 1.5rem;
+  color: rgb(115 115 115);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  border-top: 1px solid rgb(128 128 128 / 0.2);
+}
+
+.footnote a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footnote a:hover {
+  color: var(--guide-heading-color, currentColor);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Radios sit under their own labels, which carry the visible state. */
+.srOnly {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

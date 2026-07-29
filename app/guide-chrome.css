@@ -15,6 +15,14 @@ header.nextra-navbar > nav {
   padding-right: max(env(safe-area-inset-right), var(--guide-page-padding-x));
 }
 
+/* Nextra bolds the navbar link for the page you are on, which shifts the width
+ * of the row as you move between sections. The colour it also switches to
+ * (gray-600 up to the body colour) is enough of a current-page marker. Its
+ * utility sits in `@layer utilities`, so this unlayered rule wins. */
+header.nextra-navbar a[aria-current] {
+  font-weight: inherit;
+}
+
 /* Nextra's MDX content column ships `px-4 md:px-12`, which leaves the hub and
  * build guides inset further than the navbar and the demo route (the latter
  * renders outside this column). `#nextra-skip-nav` is the column's own anchor,

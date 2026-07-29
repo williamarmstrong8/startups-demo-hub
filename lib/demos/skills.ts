@@ -1,9 +1,9 @@
 /**
  * The skills each build produces, kept here rather than inline in the guide so
- * the guide's code block and the skills page always show the same file.
+ * the guide's code block and its resources rail always describe the same file.
  */
 export interface Skill {
-  /** File name of the skill's page, and its key within the group. */
+  /** Key within the group, e.g. `morning-report`. */
   id: string
   /** How the agent refers to the skill. */
   name: string
@@ -117,42 +117,21 @@ Present the briefing in this order, keeping it dignified and concise:
 
 export { eveSkills }
 
-/** A demo's skills, as one folder under /skills. */
+/** The set of skills one build produces. */
 export interface SkillGroup {
-  /**
-   * URL segment, and the name of the folder under `content/skills`. Deliberately
-   * not the demo slug: guides sit at the root of the content tree, so a folder
-   * sharing a guide's name would collide with it in the sidebar, which keys its
-   * items by name.
-   */
-  segment: string
   /** The demo these skills were written in. */
   demoSlug: string
-  /** Declaration order is display order; each folder's `_meta` mirrors it. */
+  /** Declaration order is display order. */
   skills: Skill[]
 }
 
 export const skillGroups: SkillGroup[] = [
   {
-    segment: 'eve-assistant',
     demoSlug: 'build-a-personal-ai-assistant-with-eve',
     skills: Object.values(eveSkills)
   }
 ]
 
-/** Each skill has its own page, nested under the build it came from. */
-export function skillHref(segment: string, skillId: string): string {
-  return `/skills/${segment}/${skillId}`
-}
-
-export function getSkillGroup(segment: string): SkillGroup | undefined {
-  return skillGroups.find((group) => group.segment === segment)
-}
-
 export function getSkillsForDemo(demoSlug: string): SkillGroup | undefined {
   return skillGroups.find((group) => group.demoSlug === demoSlug)
-}
-
-export function getSkill(segment: string, skillId: string): Skill | undefined {
-  return getSkillGroup(segment)?.skills.find((skill) => skill.id === skillId)
 }

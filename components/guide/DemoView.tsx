@@ -21,6 +21,14 @@ interface DemoViewProps {
 }
 
 /**
+ * Where each recording was left, so stepping out to the hub and back does not
+ * start it over. Module scope rather than storage: it only has to survive
+ * client-side navigation, and a full reload is a reasonable place to start
+ * again.
+ */
+const playbackState = new Map<string, { t: number; paused: boolean }>()
+
+/**
  * Demo playback view: video is the main focus; a sticky sidebar card shows
  * one build-guide step at a time, synced to the recording via tap timings.
  */
@@ -41,23 +49,67 @@ export function DemoView({ meta, children }: DemoViewProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [needsUnmute, setNeedsUnmute] = useState(false)
 
-  /* Start playing as soon as the page opens. Browsers refuse autoplay with
-   * sound until a visitor has interacted with the origin, so fall back to a
-   * muted start and offer the sound back rather than not playing at all. */
+  /* Attaches the recording, picks up where a previous visit left off, and starts
+   * playing. Browsers refuse autoplay with sound until a visitor has interacted
+   * with the origin, so fall back to a muted start and offer the sound back
+   * rather than not playing at all. */
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
 
-    void video.play().catch(() => {
-      video.muted = true
-      void video
-        .play()
-        .then(() => setNeedsUnmute(true))
-        .catch(() => {
-          video.muted = false
-        })
-    })
-  }, [])
+    let active = true
+    const key = meta.slug ?? recording.src
+    const saved = playbackState.get(key)
+    const resumeAt = saved?.t ?? 0
+
+    /* The source is attached here rather than in JSX so the cleanup below can
+     * drop it again: React only writes an attribute it believes has changed, so
+     * it would not restore a `src` it had already set. */
+    video.src = recording.src
+
+    if (resumeAt > 0) {
+      video.addEventListener(
+        'loadedmetadata',
+        () => {
+          video.currentTime = resumeAt
+        },
+        { once: true }
+      )
+    }
+
+    /* Someone who paused before leaving does not want sound the moment they come
+     * back, so only a fresh visit or one left playing starts itself. */
+    if (!saved?.paused) {
+      void video.play().catch(() => {
+        if (!active) return
+        video.muted = true
+        void video
+          .play()
+          .then(() => active && setNeedsUnmute(true))
+          .catch(() => {
+            video.muted = false
+          })
+      })
+    }
+
+    return () => {
+      active = false
+
+      // A recording watched to the end has nothing to resume, so forgetting it
+      // lets the next visit behave like the first one.
+      if (video.ended) playbackState.delete(key)
+      else playbackState.set(key, { t: video.currentTime, paused: video.paused })
+
+      /* Leaving the route detaches the element, which is not enough to stop it:
+       * the browser keeps the media object alive and sounding until it is
+       * collected, so the audio carries on over the hub and the next visit
+       * mounts a second one on top of it. Dropping the source leaves nothing to
+       * play, and stops the download with it. */
+      video.pause()
+      video.removeAttribute('src')
+      video.load()
+    }
+  }, [meta.slug, recording.src])
 
   const enableSound = useCallback(() => {
     const video = videoRef.current
@@ -149,13 +201,15 @@ export function DemoView({ meta, children }: DemoViewProps) {
           <div className={styles.videoPanel}>
             <div className={styles.videoFrame}>
               {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+              {/* `src` and playback are owned by the effect above, so there is
+                * no `autoPlay` here: the attribute would start a second, muted
+                * attempt of its own before the effect could restore the
+                * position. */}
               <video
                 ref={videoRef}
                 className={styles.video}
-                src={recording.src}
                 poster={meta.poster}
                 controls
-                autoPlay
                 playsInline
                 preload="auto"
                 onTimeUpdate={handleTimeUpdate}
